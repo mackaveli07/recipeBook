@@ -6,8 +6,15 @@ RECIPE_FILE = "recipes.json"
 
 def load_recipes():
     if os.path.exists(RECIPE_FILE):
-        with open(RECIPE_FILE, "r") as f:
-            return json.load(f)
+        try:
+            with open(RECIPE_FILE, "r") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return data
+                else:
+                    return []  # fallback if data is not a list
+        except json.JSONDecodeError:
+            return []  # fallback if JSON is malformed
     return []
 
 def save_recipes(recipes):
