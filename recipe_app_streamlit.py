@@ -57,7 +57,7 @@ def load_recipes_sql():
     conn.close()
     return recipes
 
-st.title("📋 Recipe Manager (SQL Edition)")
+st.title("📋 Recipe Manager")
 
 with st.form("recipe_form", clear_on_submit=True):
     name = st.text_input("Recipe Name")
