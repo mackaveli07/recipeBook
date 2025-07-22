@@ -40,19 +40,19 @@ def load_recipes_sql():
     rows = cursor.fetchall()
     recipes = []
     for row in rows:
-    recipes.append({
-        "id": row[0],
-        "name": row[1],
-        "ingredients": row[2].split("\n"),
-        "instructions": row[3],
-        "serving_size": row[4],
-        "nutrition": {
-            "calories": row[5],
-            "fat": row[6],
-            "carbohydrates": row[7],
-            "protein": row[8],
-        }
-    })
+        recipes.append({
+            "id": row[0],
+            "name": row[1],
+            "ingredients": row[2].split("\n"),
+            "instructions": row[3],
+            "serving_size": row[4],
+            "nutrition": {
+                "calories": row[5],
+                "fat": row[6],
+                "carbohydrates": row[7],
+                "protein": row[8],
+            }
+        })
 
     conn.close()
     return recipes
