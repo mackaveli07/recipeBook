@@ -53,7 +53,6 @@ def load_recipes_sql():
                 "protein": row[8],
             }
         })
-
     conn.close()
     return recipes
 
@@ -100,6 +99,3 @@ for recipe in recipes:
         st.markdown(f"Fat: {recipe['nutrition']['fat']} g")
         st.markdown(f"Carbs: {recipe['nutrition']['carbohydrates']} g")
         st.markdown(f"Protein: {recipe['nutrition']['protein']} g")
-
-if __name__ == "__main__":
-    main()
