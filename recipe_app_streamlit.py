@@ -16,13 +16,14 @@ def get_connection():
     return pyodbc.connect(conn_str)
 
 
-def save_recipe_sql(name, ingredients, instructions, nutrition, serving_size):
+def save_recipe_sql(id, name, ingredients, instructions, nutrition, serving_size):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO Recipes (name, ingredients, instructions, serving_size, calories, fat, carbohydrates, protein)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO Recipes (id, name, ingredients, instructions, serving_size, calories, fat, carbohydrates, protein)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
+        id,
         name,
         "\n".join(ingredients),
         instructions,
