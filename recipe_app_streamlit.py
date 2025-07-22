@@ -14,14 +14,7 @@ def get_connection():
         f"PWD={secrets['password']}"
     )
     return pyodbc.connect(conn_str)
-def get_connection():
-    return pyodbc.connect(
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=localhost;"
-        "DATABASE=RecipeDB;"
-        "UID=your_username;"
-        "PWD=your_password"
-    )
+
 
 def save_recipe_sql(name, ingredients, instructions, nutrition, serving_size):
     conn = get_connection()
