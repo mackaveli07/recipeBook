@@ -15,18 +15,16 @@ def get_connection():
     )
     return pyodbc.connect(conn_str)
 
-
-def save_recipe_sql(name, ingredients, instructions, nutrition, serving_size):
+def save_recipe_sql(name, ingredients, instructions, nutrition):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO Recipes (name, ingredients, instructions, serving_size, calories, fat, carbohydrates, protein)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO Recipes (name, ingredients, instructions, calories, fat, carbohydrates, protein)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (
         name,
         "\n".join(ingredients),
         instructions,
-        serving_size,
         nutrition.get("calories", 0),
         nutrition.get("fat", 0),
         nutrition.get("carbohydrates", 0),
@@ -42,31 +40,29 @@ def load_recipes_sql():
     rows = cursor.fetchall()
     recipes = []
     for row in rows:
-        if len(row) < 9:
+        if len(row) < 8:
             continue  # skip incomplete rows
         recipes.append({
             "id": row[0],
             "name": row[1],
             "ingredients": row[2].split("\n"),
             "instructions": row[3],
-            "serving_size": row[4],
             "nutrition": {
-                "calories": row[5],
-                "fat": row[6],
-                "carbohydrates": row[7],
-                "protein": row[8],
+                "calories": row[4],
+                "fat": row[5],
+                "carbohydrates": row[6],
+                "protein": row[7],
             }
         })
     conn.close()
     return recipes
 
-st.title("\ud83d\udccb Recipe Manager (SQL Edition)")
+st.title("📋 Recipe Manager (SQL Edition)")
 
 with st.form("recipe_form", clear_on_submit=True):
     name = st.text_input("Recipe Name")
     ingredients = st.text_area("Ingredients (one per line)").split("\n")
     instructions = st.text_area("Instructions")
-    serving_size = st.text_input("Serving Size")
     col1, col2 = st.columns(2)
     with col1:
         calories = st.number_input("Calories", min_value=0.0)
@@ -84,30 +80,18 @@ with st.form("recipe_form", clear_on_submit=True):
             "protein": protein
         }
 
-        # 🔍 DEBUG LOGGING
-        st.write("DEBUG: Values to be saved:")
-        st.write("Name:", name)
-        st.write("Ingredients:", ingredients)
-        st.write("Instructions:", instructions)
-        st.write("Serving Size:", serving_size)
-        st.write("Nutrition:", nutrition)
-
-        # Try to catch the real error
         try:
-            save_recipe_sql(name, ingredients, instructions, nutrition, serving_size)
+            save_recipe_sql(name, ingredients, instructions, nutrition)
             st.success("✅ Recipe saved to SQL Server!")
         except TypeError as e:
             st.error(f"❌ TypeError: {e}")
         except Exception as e:
             st.error(f"❌ Unexpected Error: {e}")
-        save_recipe_sql(name, ingredients, instructions, nutrition, serving_size)
-        st.success("\u2705 Recipe saved to SQL Server!")
 
-st.subheader("\ud83d\udcda All Recipes")
+st.subheader("📚 All Recipes")
 recipes = load_recipes_sql()
 for recipe in recipes:
     with st.expander(recipe["name"]):
-        st.markdown(f"**Serving Size:** {recipe['serving_size']}")
         st.markdown("**Ingredients:**")
         st.markdown("\n".join(f"- {item}" for item in recipe["ingredients"]))
         st.markdown("**Instructions:**")
