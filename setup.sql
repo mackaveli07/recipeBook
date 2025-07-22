@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Recipes;
+
 
 CREATE TABLE Recipes (
     id INT IDENTITY(1,1) PRIMARY KEY,
