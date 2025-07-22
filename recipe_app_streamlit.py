@@ -2,24 +2,27 @@ import streamlit as st
 import json
 import os
 
-RECIPE_FILE = "recipes.json"
+DATA_DIR = "data"
+RECIPE_FILE = os.path.join(DATA_DIR, "recipes.json")
 
 def load_recipes():
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
     if os.path.exists(RECIPE_FILE):
         try:
             with open(RECIPE_FILE, "r") as f:
                 data = json.load(f)
-                if isinstance(data, list):
-                    return data
-                else:
-                    return []  # fallback if data is not a list
+                return data if isinstance(data, list) else []
         except json.JSONDecodeError:
-            return []  # fallback if JSON is malformed
+            return []
     return []
 
 def save_recipes(recipes):
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
     with open(RECIPE_FILE, "w") as f:
         json.dump(recipes, f, indent=4)
+
 
 def add_recipe(name, ingredients, instructions, nutrition, serving_size):
     recipes = load_recipes()
