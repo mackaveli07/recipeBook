@@ -5,14 +5,15 @@ import pyodbc
 
 # SQL Connection settings (replace with your actual values)
 def get_connection():
-    return pyodbc.connect(
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=;"
-        "DATABASE=;"
-        "UID=your;"
-        "PWD="
+    secrets = st.secrets["azure_db"]
+    conn_str = (
+        f"DRIVER={{{secrets['driver']}}};"
+        f"SERVER={secrets['server']};"
+        f"DATABASE={secrets['database']};"
+        f"UID={secrets['user']};"
+        f"PWD={secrets['password']}"
     )
-
+    return pyodbc.connect(conn_str)
 def save_recipe_sql(name, ingredients, instructions, nutrition, serving_size):
     conn = get_connection()
     cursor = conn.cursor()
