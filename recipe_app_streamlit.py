@@ -16,14 +16,13 @@ def get_connection():
     return pyodbc.connect(conn_str)
 
 
-def save_recipe_sql(id, name, ingredients, instructions, nutrition, serving_size):
+def save_recipe_sql(name, ingredients, instructions, nutrition, serving_size):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO Recipes (id, name, ingredients, instructions, serving_size, calories, fat, carbohydrates, protein)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO Recipes (name, ingredients, instructions, serving_size, calories, fat, carbohydrates, protein)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-        id,
         name,
         "\n".join(ingredients),
         instructions,
@@ -61,7 +60,7 @@ def load_recipes_sql():
     conn.close()
     return recipes
 
-st.title("📋 Recipe Manager (SQL Edition)")
+st.title("\ud83d\udccb Recipe Manager (SQL Edition)")
 
 with st.form("recipe_form", clear_on_submit=True):
     name = st.text_input("Recipe Name")
@@ -84,10 +83,10 @@ with st.form("recipe_form", clear_on_submit=True):
             "carbohydrates": carbs,
             "protein": protein
         }
-        save_recipe_sql(id, name, ingredients, instructions, nutrition, serving_size)
-        st.success("✅ Recipe saved to SQL Server!")
+        save_recipe_sql(name, ingredients, instructions, nutrition, serving_size)
+        st.success("\u2705 Recipe saved to SQL Server!")
 
-st.subheader("📚 All Recipes")
+st.subheader("\ud83d\udcda All Recipes")
 recipes = load_recipes_sql()
 for recipe in recipes:
     with st.expander(recipe["name"]):
