@@ -23,6 +23,21 @@ def save_recipes(recipes):
     with open(RECIPE_FILE, "w") as f:
         json.dump(recipes, f, indent=4)
 
+def add_or_update_recipe(index, name, ingredients, instructions, nutrition, serving_size):
+    recipes = load_recipes()
+    new_recipe = {
+        "name": name,
+        "ingredients": [i.strip() for i in ingredients.split("\\n") if i.strip()],
+        "instructions": instructions.strip(),
+        "nutrition": nutrition,
+        "serving_size": serving_size
+    }
+    if index is None:
+        recipes.append(new_recipe)
+    else:
+        recipes[index] = new_recipe
+    save_recipes(recipes)
+
 
 def add_recipe(name, ingredients, instructions, nutrition, serving_size):
     recipes = load_recipes()
