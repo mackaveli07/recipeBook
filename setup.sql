@@ -4,7 +4,7 @@ CREATE TABLE Recipes (
     name NVARCHAR(255),
     ingredients TEXT,
     instructions TEXT,
-    serving_size NVARCHAR(100),
+    
     calories FLOAT,
     fat FLOAT,
     carbohydrates FLOAT,
