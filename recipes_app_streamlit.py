@@ -2,7 +2,6 @@
 import streamlit as st
 import pyodbc
 
-# SQL Connection settings (replace with your actual values)
 def get_connection():
     return pyodbc.connect(
         "DRIVER={ODBC Driver 17 for SQL Server};"
@@ -38,6 +37,8 @@ def load_recipes_sql():
     rows = cursor.fetchall()
     recipes = []
     for row in rows:
+        if len(row) < 9:
+            continue  # skip incomplete rows
         recipes.append({
             "id": row[0],
             "name": row[1],
@@ -55,9 +56,6 @@ def load_recipes_sql():
     return recipes
 
 st.title("📋 Recipe Manager (SQL Edition)")
-
-if "edit_index" not in st.session_state:
-    st.session_state.edit_index = None
 
 with st.form("recipe_form", clear_on_submit=True):
     name = st.text_input("Recipe Name")
