@@ -7,10 +7,10 @@ import pyodbc
 def get_connection():
     return pyodbc.connect(
         "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=localhost;"
-        "DATABASE=RecipeDB;"
-        "UID=your_username;"
-        "PWD=your_password"
+        "SERVER=;"
+        "DATABASE=;"
+        "UID=your;"
+        "PWD="
     )
 
 def save_recipe_sql(name, ingredients, instructions, nutrition, serving_size):
