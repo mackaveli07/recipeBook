@@ -83,7 +83,7 @@ with st.form("recipe_form", clear_on_submit=True):
             "carbohydrates": carbs,
             "protein": protein
         }
-        save_recipe_sql(name, ingredients, instructions, nutrition, serving_size)
+        save_recipe_sql(name, ingredients, instructions, serving_size, nutrition)
         st.success("\u2705 Recipe saved to SQL Server!")
 
 st.subheader("\ud83d\udcda All Recipes")
