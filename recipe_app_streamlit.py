@@ -84,32 +84,59 @@ def main():
                 add_recipe(name, ingredients, instructions, nutrition, serving_size)
                 st.success(f"Recipe '{name}' saved!")
 
-    elif menu == "View Recipes":
-        st.header("📚 Stored Recipes")
-        recipes = load_recipes()
+    elif menu == "View/Edit Recipes":
+        st.header("📚 View or Edit Recipes")
         if not recipes:
             st.info("No recipes found.")
         else:
-            for r in recipes:
+            for i, r in enumerate(recipes):
                 with st.expander(r["name"]):
                     st.subheader("Ingredients")
-                    st.markdown("\n".join(f"- {i}" for i in r["ingredients"]))
+                    st.markdown("\\n".join(f"- {ing}" for ing in r["ingredients"]))
 
                     st.subheader("Instructions")
                     st.markdown(r["instructions"])
 
-                    if "serving_size" in r:
-                        st.markdown(f"**Serving Size**: {r['serving_size']}")
+                    st.markdown(f"**Serving Size**: {r['serving_size']}")
 
                     if "nutrition" in r:
                         st.subheader("🍎 Nutrition Facts")
                         n = r["nutrition"]
                         st.markdown(
-                            f"- **Calories**: {n.get('calories', 0)} kcal\n"
-                            f"- **Fat**: {n.get('fat', 0)} g\n"
-                            f"- **Carbohydrates**: {n.get('carbohydrates', 0)} g\n"
+                            f"- **Calories**: {n.get('calories', 0)} kcal\\n"
+                            f"- **Fat**: {n.get('fat', 0)} g\\n"
+                            f"- **Carbs**: {n.get('carbohydrates', 0)} g\\n"
                             f"- **Protein**: {n.get('protein', 0)} g"
                         )
+
+                    if st.button(f"Edit '{r['name']}'", key=f"edit_{i}"):
+                        st.session_state.edit_index = i
+
+            if "edit_index" in st.session_state:
+                idx = st.session_state.edit_index
+                r = recipes[idx]
+                st.subheader(f"✏️ Edit Recipe: {r['name']}")
+                name = st.text_input("Recipe Name", value=r["name"], key="edit_name")
+                ingredients = st.text_area("Ingredients (one per line)", value="\\n".join(r["ingredients"]), key="edit_ingredients")
+                instructions = st.text_area("Instructions", value=r["instructions"], key="edit_instructions")
+                serving_size = st.text_input("Serving Size", value=r["serving_size"], key="edit_serving")
+
+                n = r.get("nutrition", {})
+                calories = st.number_input("Calories", min_value=0.0, format="%.2f", value=n.get("calories", 0.0), key="edit_calories")
+                fat = st.number_input("Fat (g)", min_value=0.0, format="%.2f", value=n.get("fat", 0.0), key="edit_fat")
+                carbs = st.number_input("Carbohydrates (g)", min_value=0.0, format="%.2f", value=n.get("carbohydrates", 0.0), key="edit_carbs")
+                protein = st.number_input("Protein (g)", min_value=0.0, format="%.2f", value=n.get("protein", 0.0), key="edit_protein")
+
+                if st.button("Save Changes"):
+                    updated_nutrition = {
+                        "calories": calories,
+                        "fat": fat,
+                        "carbohydrates": carbs,
+                        "protein": protein
+                    }
+                    add_or_update_recipe(idx, name, ingredients, instructions, updated_nutrition, serving_size)
+                    st.success(f"Recipe '{name}' updated!")
+                    del st.session_state.edit_index
 
 if __name__ == "__main__":
     main()
