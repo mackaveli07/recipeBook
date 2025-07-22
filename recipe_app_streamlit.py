@@ -43,7 +43,7 @@ def load_recipes_sql():
         recipes.append({
             "id": row[0],
             "name": row[1],
-            "ingredients": row[2].split("\n"),
+            "ingredients": row[].split("\n"),
             "instructions": row[3],
             "serving_size": row[4],
             "nutrition": {
