@@ -83,6 +83,23 @@ with st.form("recipe_form", clear_on_submit=True):
             "carbohydrates": carbs,
             "protein": protein
         }
+
+        # 🔍 DEBUG LOGGING
+        st.write("DEBUG: Values to be saved:")
+        st.write("Name:", name)
+        st.write("Ingredients:", ingredients)
+        st.write("Instructions:", instructions)
+        st.write("Serving Size:", serving_size)
+        st.write("Nutrition:", nutrition)
+
+        # Try to catch the real error
+        try:
+            save_recipe_sql(name, ingredients, instructions, nutrition, serving_size)
+            st.success("✅ Recipe saved to SQL Server!")
+        except TypeError as e:
+            st.error(f"❌ TypeError: {e}")
+        except Exception as e:
+            st.error(f"❌ Unexpected Error: {e}")
         save_recipe_sql(name, ingredients, instructions, nutrition, serving_size)
         st.success("\u2705 Recipe saved to SQL Server!")
 
